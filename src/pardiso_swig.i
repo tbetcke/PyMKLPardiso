@@ -1,4 +1,4 @@
-%module pardiso
+%module core
 %{
 #define SWIG_FILE_WITH_INIT
 
@@ -50,6 +50,68 @@ void pardiso_complex(long pt[64], int *maxfct, int *mnum, int *mtype, int *phase
 
 %pythoncode %{
 
+	def pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b):
+		"""Low-level interface to the real double precision Pardiso solver
+		
+		   (x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
+		
+		   For a detailed description of the Parameters see the MKL Pardio documentation.
+		   The following data types are assumed
+		   
+		   pt        - numpy.long
+		   maxfct    - int
+		   mnum      - int
+		   mtype     - int
+		   phase     - int
+		   n         - int
+		   a         - numpy.double
+		   ia        - numpy.int32
+		   ja        - numpy.int32
+		   perm      - numpy.int32
+		   nrhs,     - int
+		   iparm     - numpy.int32
+		   msglvl    - int
+		   b         - numpy.double
+		   
+		   Note that Fortran convention is assumed for the arrays (i.e. column-major order and
+		   indices start from 1)
+		   
+		"""
+		return _core.pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+		   
+	def pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b):
+		"""Low-level interface to the complex double precision Pardiso solver
+		
+		   (x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
+		
+		   For a detailed description of the Parameters see the MKL Pardio documentation.
+		   The following data types are assumed
+		   
+		   pt        - numpy.long
+		   maxfct    - int
+		   mnum      - int
+		   mtype     - int
+		   phase     - int
+		   n         - int
+		   a         - numpy.complex128
+		   ia        - numpy.int32
+		   ja        - numpy.int32
+		   perm      - numpy.int32
+		   nrhs,     - int
+		   iparm     - numpy.int32
+		   msglvl    - int
+		   b         - numpy.complex128
+		   
+		   Note that Fortran convention is assumed for the arrays (i.e. column-major order and
+		   indices start from 1)
+		   
+		"""
+		return _core.pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+		
+%}   
+
+%pythoncode %{
+
 if __name__ == "__main__":
 	# Matrix data
 	n=5
@@ -79,21 +141,21 @@ if __name__ == "__main__":
 	phase=11
 	
 	
-	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 	
 	phase=22
-	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 	
 	phase=33;
 	iparm[7]=2
-	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 	print "Solution: "
 	print x
 	phase=-1
-	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_real(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 		
 		
@@ -137,24 +199,23 @@ if __name__ == "__main__":
 	phase=11
 	b=(1+1j)*numpy.ones(n,dtype='complex128')
 		
-	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 	
 	phase=22
-	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 	
 	phase=33;
 	iparm[7]=1
-	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
 	print "Solution: "
 	print x
 	phase=-1
-	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b,n)
+	(x,error)=pardiso_complex(pt,maxfct,mnum,mtype,phase,n,a,ia,ja,perm,nrhs,iparm,msglvl,b)
 	print "Error %i" % error
-    
-                                     
+             
 	
 	
 %}
